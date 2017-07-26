@@ -35,6 +35,7 @@
 
 #include <opencv2/core/core.hpp>
 #include "modelObjectFactory.h"
+#include <map>
 //#include "GLMetaseq.h"	// Model loader
 
 namespace cvar{

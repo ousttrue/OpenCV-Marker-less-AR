@@ -257,8 +257,7 @@ void viewModel::initAccHomMat()
 
 bool viewModel::setRecogId(int id, Mat& homMat)
 {
-	map<int, MODEL_INFO>::iterator itr = model_map.find(id);
-	
+	auto itr = model_map.find(id);
 	if(itr==model_map.end()){
 		return false;
 	}

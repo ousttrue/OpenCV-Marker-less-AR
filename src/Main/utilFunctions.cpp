@@ -32,6 +32,7 @@
 //M*/
 #include "utilFunctions.h"
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 using namespace std;
 using namespace cv;
@@ -212,7 +213,7 @@ void drawPoints(Mat& frame, vector<Point2f>& corners, vector<unsigned char>& mas
 	int size = corners.size();
 	for(int i=0; i<size; i++){
 		if(mask_vec.empty() || mask_vec[i] > 0){
-			circle(frame, corners[i], thickness, color, lineType, shift);
+			cv::circle(frame, corners[i], thickness, color, lineType, shift);
 		}
 	}
 }

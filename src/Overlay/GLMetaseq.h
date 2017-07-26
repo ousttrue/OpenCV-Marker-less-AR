@@ -203,6 +203,7 @@ Object chunk Å® face chunk of material index (M (% d)) is not supported to -1.
 	#include <GLUT/glut.h>
 	#include <OpenGL/glext.h>
 #else
+    #include <Windows.h>
 	#include <GL/gl.h>
 	#include <GL/glu.h>
 	#include <GL/glut.h>
@@ -235,8 +236,6 @@ Object chunk Å® face chunk of material index (M (% d)) is not supported to -1.
 
 	#include "png.h"
 	#include "zlib.h"
-	#pragma comment(lib,"libpng.lib")
-	#pragma comment(lib,"zlib.lib")
 
 #endif
 

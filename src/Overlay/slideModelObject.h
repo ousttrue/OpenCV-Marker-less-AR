@@ -34,6 +34,7 @@
 #define __SLIDE_MODEL_OBJECT__
 
 #include <vector>
+#include <Windows.h>
 #include <GL/glut.h>
 #include <opencv2/core/core.hpp>
 #include "modelobject.h"

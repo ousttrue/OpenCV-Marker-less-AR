@@ -31,7 +31,9 @@
 //
 //M*/
 #include "controlOR.h"
-#include <opencv2/nonfree/nonfree.hpp>
+//#include <opencv2/nonfree/nonfree.hpp>
+#include <opencv2/features2d.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 #include <sstream>
 
 using namespace std;
@@ -45,8 +47,8 @@ controlOR::controlOR(void)
 //	featureDetector = 0;
 	detectorType = "SURF";
 	descriptorType = "SURF";
-	feature_detector = 0;
-	descriptor_extractor = 0;
+	feature_detector;
+	descriptor_extractor;
 	initializeFeatureDetector();
 //	visual_words.setFeatureDimention(feature_dimention);
 	voteNum = 1;
@@ -167,10 +169,37 @@ bool controlOR::setDetectorType(const std::string& detector_type)
 {
 	cv::Ptr<cv::FeatureDetector> tmp_detector;
 	try{
-		tmp_detector = FeatureDetector::create(detector_type);
-		if(tmp_detector.empty()){
-			return false;
-		}
+        if (detector_type == "FAST") {
+            tmp_detector = cv::FastFeatureDetector::create();
+        }
+        /*
+        else if (detector_type == "STAR") {
+            tmp_detector = 
+
+        }
+        */
+        else if (detector_type == "SIFT") {
+            tmp_detector = cv::xfeatures2d::SiftFeatureDetector::create();
+        }
+        else if (detector_type == "SURF") {
+            tmp_detector = cv::xfeatures2d::SurfFeatureDetector::create();
+        }
+        /*
+        else if (detector_type == "MSER") {
+            tmp_detector = cv::MSer
+        }
+        */
+        else if (detector_type == "GFTT") {
+            tmp_detector = cv::GFTTDetector::create();
+        }
+        /*
+        else if (detector_type == "HARRIS") {
+            tmp_detector = cv::Har
+        }
+        */
+        else {
+            return false;
+        }
 	}
 	catch(cv::Exception e){
 		return false;
@@ -186,10 +215,35 @@ bool controlOR::setDescriptorType(const std::string& descriptor_type)
 {
 	cv::Ptr<cv::DescriptorExtractor> tmp_descriptor;
 	try{
-		tmp_descriptor = DescriptorExtractor::create(descriptor_type);
-		if(tmp_descriptor.empty()){
-			return false;
-		}
+        /*
+        if (descriptor_type == "FAST") {
+            tmp_descriptor = cv::FastDes
+        }
+        else if (descriptor_type == "STAR") {
+        tmp_descriptor =
+
+        }
+        */
+        if (descriptor_type == "SIFT") {
+            tmp_descriptor = cv::xfeatures2d::SiftDescriptorExtractor::create();
+        }
+        else if (descriptor_type == "SURF") {
+            tmp_descriptor = cv::xfeatures2d::SurfDescriptorExtractor::create();
+        }
+        /*
+        else if (descriptor_type == "MSER") {
+        tmp_descriptor = cv::MSer
+        }
+        else if (descriptor_type == "GFTT") {
+            tmp_descriptor = cv::GFTTDes
+        }
+        else if (descriptor_type == "HARRIS") {
+        tmp_descriptor = cv::Har
+        }
+        */
+        else {
+            return false;
+        }
 	}
 	catch(cv::Exception e){
 		return false;
@@ -304,10 +358,12 @@ int controlOR::loadObjectDB(const string filename)
 void controlOR::read(FileNode& cvfn)
 {
 	voteNum = cvfn["voteNum"];
+
 	detectorType = cvfn["detectorType"];
-	descriptorType = cvfn["descriptorType"];
-	feature_detector->create(detectorType);
-	descriptor_extractor->create(descriptorType);
+    setDetectorType(detectorType);
+   
+    descriptorType = cvfn["descriptorType"];
+    setDescriptorType(descriptorType);
 }
 
 
@@ -324,7 +380,7 @@ int controlOR::saveObjectDB(const string filename) const
 
 void controlOR::write(FileStorage& fs, string name) const
 {
-	WriteStructContext ws(fs, name, CV_NODE_MAP);
+	cv::internal::WriteStructContext ws(fs, name, CV_NODE_MAP);
 	cv::write(fs, "voteNum", voteNum);
 	cv::write(fs, "detectorType", detectorType);
 	cv::write(fs, "descriptorType", descriptorType);
@@ -341,15 +397,15 @@ int controlOR::initializeFeatureDetector()
 //	SURF* surf_pt = new SURF(500,4,2,true);
 //	featureDetector = surf_pt;
 //	feature_dimention = 128;
-	cv::initModule_nonfree();
-	feature_detector = FeatureDetector::create(detectorType);	// create feature detector
-	descriptor_extractor = DescriptorExtractor::create(descriptorType);	// create descriptor extractor
+	//cv::xfeatures2d::initModule_nonfree();
+	setDetectorType(detectorType);	// create feature detector
+	setDescriptorType(descriptorType);	// create descriptor extractor
 
 	return 0;
 }
 
 //int controlOR::extractFeatures(const Mat& src_img, vector<KeyPoint>& kpt, vector<float>& descriptor)
-int controlOR::extractFeatures(const cv::Mat& src_img, cv::vector<cv::KeyPoint>& kpt, cv::Mat& descriptor) const
+int controlOR::extractFeatures(const cv::Mat& src_img, std::vector<cv::KeyPoint>& kpt, cv::Mat& descriptor) const
 {
 	// extract freak
 	try{
@@ -378,9 +434,9 @@ int controlOR::releaseFeatureDetector()
 //	delete (SURF*)featureDetector;
 //	featureDetector = 0;
 	feature_detector.release();
-	feature_detector = 0;
+	//feature_detector = 0;
 	descriptor_extractor.release();
-	descriptor_extractor = 0;
+	//descriptor_extractor = 0;
 
 	return 0;
 }

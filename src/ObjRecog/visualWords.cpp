@@ -186,7 +186,7 @@ bool visualWords::saveIndex(const string& filename) const
 void visualWords::writeIndex(cv::FileStorage& FS, const std::string& name) const
 {
 	try{
-		cv::WriteStructContext ws(FS, name, CV_NODE_MAP);
+		cv::internal::WriteStructContext ws(FS, name, CV_NODE_MAP);
 		cv::write(FS, "matcherType", matcherType);
 		descriptor_matcher->write(FS);
 	}
@@ -213,7 +213,7 @@ bool visualWords::loadIndex(const string& filename)
 void visualWords::readIndex(const cv::FileNode& FN)
 {
 	try{
-		cv::read(FN["matcherType"], this->matcherType, "");
+		FN["matcherType"] >> this->matcherType;
 		this->descriptor_matcher = DescriptorMatcher::create(matcherType);	
 		descriptor_matcher->read(FN);
 	}
@@ -366,13 +366,13 @@ bool visualWords::load_vw_binary(const string& filename)
 //int visualWords::write(CvFileStorage* cvfs, const char* name)
 void visualWords::write(FileStorage& fs, const string& name) const
 {
-	WriteStructContext ws(fs, name, CV_NODE_MAP);
+	cv::internal::WriteStructContext ws(fs, name, CV_NODE_MAP);
 //	cv::write(fs, "feature_dim", feature_dim);
 	cv::write(fs, "version", version);
 	cv::write(fs, "radius", radius);
 
 	vector<Mat> train_desc = descriptor_matcher->getTrainDescriptors();
-	WriteStructContext ws2(fs, "TrainDescriptors", CV_NODE_SEQ);
+	cv::internal::WriteStructContext ws2(fs, "TrainDescriptors", CV_NODE_SEQ);
 	vector<Mat>::iterator itr;
 	for(itr = train_desc.begin(); itr != train_desc.end(); itr++)
 	{

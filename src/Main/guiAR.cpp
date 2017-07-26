@@ -35,6 +35,7 @@
 #include <iostream>
 
 //OpenGL
+#include <Windows.h>
 #include <GL/glut.h>
 //OpenCV
 #include <opencv2/imgproc/imgproc.hpp>

@@ -41,9 +41,10 @@
 
 #include "commonCvFunctions.h"
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #include "cameraCalibration.h"
 #include "guiAR.h"
-#ifdef _DEBUG
+#ifdef USE_GTEST
 #include <gtest/gtest.h>
 #endif
 
@@ -54,7 +55,7 @@ using namespace cvar::or;
 
 int main(int argc, char * argv[])
 {
-#ifdef _DEBUG
+#ifdef USE_GTEST
 	::testing::InitGoogleTest(&argc, argv);
 #endif
 
@@ -101,7 +102,7 @@ int main(int argc, char * argv[])
 			cout << "ar_start" << endl;
 			cout << "exit" << endl;
 		}
-#ifdef _DEBUG
+#ifdef USE_GTEST
 		else if(opt=="run_test"){
 			RUN_ALL_TESTS();
 		}
@@ -145,7 +146,7 @@ int main(int argc, char * argv[])
 			cin >> opt2;
 
 			ifstream ifs(opt2.c_str());
-			if(ifs!=NULL){
+			if(ifs){
 				bool exitflag2 = false;
 				int count = 0;
 				string buf;
@@ -221,7 +222,7 @@ int main(int argc, char * argv[])
 //			char buf[256];
 			string buf;
 			ifstream ifs(regist_list.c_str());
-			if(ifs!=NULL){
+			if(ifs){
 //			if(ifs.is_open()){
 				bool exitflag2 = false;
 				int count = 0;
@@ -324,9 +325,9 @@ int main(int argc, char * argv[])
 
 					Scalar val(255);
 					
-					line(queryimg,result_pt[3],result_pt[0],val);
+					cv::line(queryimg, result_pt[3], result_pt[0], val);
 					for(int i=0; i<3; i++){
-						line(queryimg,result_pt[i],result_pt[i+1],val);
+						cv::line(queryimg,result_pt[i],result_pt[i+1],val);
 					}
 
 					namedWindow("result",CV_WINDOW_AUTOSIZE);
@@ -369,7 +370,7 @@ int main(int argc, char * argv[])
 			string buf;
 			ifstream ifs(img_list.c_str());
 			ofstream ofs(result_file.c_str());
-			if(ifs!=NULL){
+			if(ifs){
 //			if(ifs.is_open()){
 				int id = 1;
 //				while(!ifs.eof()){
@@ -518,7 +519,7 @@ int main(int argc, char * argv[])
 
 			ifstream ifs(img_list.c_str());
 			string buf;
-			if(ifs!=NULL){
+			if(ifs){
 //			if(ifs.is_open()){
 				int id = 1;
 //				while(!ifs.eof()){
